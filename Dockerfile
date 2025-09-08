@@ -26,13 +26,13 @@ RUN echo "Descargando cagent..." && \
 RUN cat > /app/agents/basic_agent.yaml << 'EOF'
 agents:
   root:
-    model: openai/gpt-4
+    model: openai-gpt4
     description: A helpful AI assistant
     instruction: |
       You are a knowledgeable assistant that helps users with various tasks. Be helpful, accurate, and concise in your responses.
 
 models:
-  openai/gpt-4:
+  openai-gpt4:
     provider: openai
     model: gpt-4
     max_tokens: 2000
