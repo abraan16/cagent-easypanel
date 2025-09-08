@@ -40,27 +40,15 @@ EOF
 
 RUN cat > /app/start.sh << 'EOF'
 #!/bin/bash
-
 echo "🚀 Iniciando cagent..."
 echo "✅ cagent versión: $(cagent version)"
-
-if [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ]; then
-    echo "⚠️  Advertencia: Configura al menos una API key"
-fi
-
-echo "📁 Agentes disponibles:"
-ls -la /app/agents/
-
 echo "▶️ Ejecutando cagent..."
 cagent run /app/agents/basic_agent.yaml
 EOF
 
-# Corrige los finales de línea de Windows (CRLF) a formato Unix (LF) Y da permisos de ejecución
 RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
 
 EXPOSE 8080
-
-VOLUME ["/app/agents", "/app/config", "/app/data"]
 
 RUN adduser -D -s /bin/bash cagent && \
     chown -R cagent:cagent /app
