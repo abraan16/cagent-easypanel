@@ -38,13 +38,19 @@ models:
     max_tokens: 2000
 EOF
 
+# --- REEMPLAZA ESTA SECCIÓN EN TU DOCKERFILE ---
 RUN cat > /app/start.sh << 'EOF'
 #!/bin/bash
 echo "🚀 Iniciando cagent..."
 echo "✅ cagent versión: $(cagent version)"
+
+# --- LÍNEA DE DEPURACIÓN AÑADIDA ---
+echo "🔑 Verificando API Key de OpenAI... (Los primeros 8 caracteres son): [${OPENAI_API_KEY:0:8}]"
+
 echo "▶️ Ejecutando cagent..."
 cagent run /app/agents/basic_agent.yaml
 EOF
+# --- FIN DE LA SECCIÓN ---
 
 RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
 
