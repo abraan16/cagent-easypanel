@@ -19,7 +19,7 @@ WORKDIR /app
 RUN mkdir -p /app/agents /app/config /app/data /app/logs
 
 RUN echo "Descargando cagent..." && \
-    wget -q https://github.com/docker/cagent/releases/latest/download/cagent-linux-amd64 -O /usr/local/bin/cagent && \
+    wget https://github.com/docker/cagent/releases/latest/download/cagent-linux-amd64 -O /usr/local/bin/cagent && \
     chmod +x /usr/local/bin/cagent && \
     cagent version
 
