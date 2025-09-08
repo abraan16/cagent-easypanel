@@ -6,13 +6,7 @@ LABEL description="cagent AI Agent Runtime"
 ENV CAGENT_HOME=/app
 ENV PATH="$PATH:/usr/local/bin"
 
-RUN apk add --no-cache \
-    curl \
-    wget \
-    git \
-    ca-certificates \
-    bash \
-    && rm -rf /var/cache/apk/*
+RUN apk add --no-cache curl wget git ca-certificates bash && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
@@ -30,7 +24,6 @@ agents:
     description: A helpful AI assistant
     instruction: |
       You are a knowledgeable assistant that helps users with various tasks. Be helpful, accurate, and concise in your responses.
-
 models:
   openai/gpt-3.5-turbo:
     provider: openai
@@ -38,19 +31,14 @@ models:
     max_tokens: 2000
 EOF
 
-# --- REEMPLAZA ESTA SECCIÓN EN TU DOCKERFILE ---
 RUN cat > /app/start.sh << 'EOF'
 #!/bin/bash
-echo "🚀 Iniciando cagent..."
+echo "🚀 Iniciando cagent en modo DEBUG..."
 echo "✅ cagent versión: $(cagent version)"
-
-# --- LÍNEA DE DEPURACIÓN AÑADIDA ---
 echo "🔑 Verificando API Key de OpenAI... (Los primeros 8 caracteres son): [${OPENAI_API_KEY:0:8}]"
-
-echo "▶️ Ejecutando cagent..."
-cagent run /app/agents/basic_agent.yaml
+echo "▶️ Ejecutando cagent con debug..."
+cagent run /app/agents/basic_agent.yaml --debug
 EOF
-# --- FIN DE LA SECCIÓN ---
 
 RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
 
