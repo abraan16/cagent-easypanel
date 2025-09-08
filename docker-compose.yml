@@ -5,35 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    
-    container_name: cagent-service
-
-    # --- AÑADE ESTA LÍNEA AQUÍ ---
-    entrypoint: ["/app/start.sh"]
-    
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
-      - CAGENT_HOME=/app
-    
-    volumes:
-      - cagent_agents:/app/agents
-      - cagent_config:/app/config
-      - cagent_data:/app/data
-    
+    restart: unless-stopped
     ports:
       - "8080:8080"
-    
-    restart: unless-stopped
-    
     healthcheck:
       test: ["CMD", "cagent", "version"]
       interval: 30s
       timeout: 10s
       retries: 3
-
-volumes:
-  cagent_agents:
-  cagent_config:
-  cagent_data:
