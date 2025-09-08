@@ -44,8 +44,8 @@ RUN cat > /app/start.sh << 'EOF'
 echo "🚀 Iniciando cagent..."
 echo "✅ cagent versión: $(cagent version)"
 
-if [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ]; then
-    echo "⚠️  Advertencia: Configura al menos una API key"
+if [ -z "$OPENAI_API_KEY" ]; then
+    echo "⚠️  Advertencia: La OPENAI_API_KEY es necesaria para el agente por defecto, pero no está configurada."
 fi
 
 echo "📁 Agentes disponibles:"
