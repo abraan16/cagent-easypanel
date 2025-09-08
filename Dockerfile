@@ -1,7 +1,7 @@
 FROM alpine:3.19
 
 LABEL maintainer="EasyPanel User"
-LABEL description="cagent AI Agent Runtime"
+LABEL description="cagent AI Agent Runtime - Diagnostic Test"
 
 ENV CAGENT_HOME=/app
 ENV PATH="$PATH:/usr/local/bin"
@@ -17,27 +17,21 @@ RUN echo "Descargando cagent..." && \
     chmod +x /usr/local/bin/cagent && \
     cagent version
 
-RUN cat > /app/agents/basic_agent.yaml << 'EOF'
-agents:
-  root:
-    model: openai/gpt-3.5-turbo
-    description: A helpful AI assistant
-    instruction: |
-      You are a knowledgeable assistant that helps users with various tasks. Be helpful, accurate, and concise in your responses.
-models:
-  openai/gpt-3.5-turbo:
-    provider: openai
-    model: gpt-3.5-turbo
-    max_tokens: 2000
-EOF
-
 RUN cat > /app/start.sh << 'EOF'
 #!/bin/bash
-echo "🚀 Iniciando cagent en modo DEBUG..."
-echo "✅ cagent versión: $(cagent version)"
+echo "🚀 Realizando prueba de diagnóstico de OpenAI..."
 echo "🔑 Verificando API Key de OpenAI... (Los primeros 8 caracteres son): [${OPENAI_API_KEY:0:8}]"
-echo "▶️ Ejecutando cagent con debug..."
-cagent run /app/agents/basic_agent.yaml --debug
+
+echo "📡 Intentando contactar la API de OpenAI con curl..."
+
+# Este comando intenta listar los modelos de OpenAI
+curl https://api.openai.com/v1/models \
+  -H "Authorization: Bearer $OPENAI_API_KEY"
+
+echo ""
+echo "🏁 Prueba finalizada. Revisa el resultado de curl arriba."
+# Mantenemos el contenedor vivo por 5 minutos para poder ver los logs
+sleep 300
 EOF
 
 RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
