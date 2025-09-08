@@ -42,10 +42,27 @@ RUN cat > /app/start.sh << 'EOF'
 #!/bin/bash
 
 echo "🚀 Iniciando cagent..."
+
+echo "--- Variables de entorno ---"
+echo "OPENAI_API_KEY: ${OPENAI_API_KEY:+presente}"
+echo "ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:+presente}"
+echo "GOOGLE_API_KEY: ${GOOGLE_API_KEY:+presente}"
+echo "--------------------------"
+
+if [ ! -x "/usr/local/bin/cagent" ]; then
+    echo "❌ Error: cagent no se encuentra o no es ejecutable."
+    exit 1
+fi
+
 echo "✅ cagent versión: $(cagent version)"
 
 if [ -z "$OPENAI_API_KEY" ]; then
     echo "⚠️  Advertencia: La OPENAI_API_KEY es necesaria para el agente por defecto, pero no está configurada."
+fi
+
+if [ ! -f "/app/agents/basic_agent.yaml" ]; then
+    echo "❌ Error: /app/agents/basic_agent.yaml no encontrado."
+    exit 1
 fi
 
 echo "📁 Agentes disponibles:"
